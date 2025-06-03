@@ -1,7 +1,5 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
-
 interface SelectBoxProps {
   label: string;
 }

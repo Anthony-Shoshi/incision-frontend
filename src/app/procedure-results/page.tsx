@@ -46,7 +46,7 @@ export default function ProcedureResultsPage() {
         />
         <SelectBox
           label="Specialty"
-          value={selectedProcedure}
+          value={selectedSpecialty}
           onChange={handleSpecialtyChange}
           options={procedures.map((p) => ({ label: p.name, value: p.name }))}
         />
