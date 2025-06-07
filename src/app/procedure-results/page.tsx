@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { Procedure, Speciality } from '@/types/models';
 
 const ProcedureResultsPage = () => {
+const ProcedureResultsPage = () => {
   const [specialities, setSpecialities] = useState<Speciality[]>([]);
   const [procedures, setProcedures] = useState<Procedure[]>([]);
   const [selectedSpecialityId, setSelectedSpecialityId] = useState<number | null>(null);
@@ -77,6 +78,7 @@ const ProcedureResultsPage = () => {
     <>
       <Head>
         <title>Incision - Cost Analysis Dashboard</title>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
       </Head>
 
       <div className="max-w-7xl mx-auto p-6">
