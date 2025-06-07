@@ -56,12 +56,26 @@ const ProcedureResultsPage = () => {
   const [selectedProcedure, setSelectedProcedure] = useState(procedures[0].name);
   const [selectedSpecialty, setSelectedSpecialty] = useState(procedures[0].specialty);
 
+  type CostCategory = {
+  [key: string]: string[];
+};
+
+const costs: {
+   total: string[];
+  categoryA: CostCategory;
+  categoryB: CostCategory;
+} = {
+  total: doctors.map(() => ''),
+  categoryA: {},
+  categoryB: {},
+};
+
   // Initialize costs object
-  const costs = {
-    total: doctors.map(() => ''),
-    categoryA: {},
-    categoryB: {},
-  };
+  // const costs = {
+  //   total: doctors.map(() => ''),
+  //   categoryA: {},
+  //   categoryB: {},
+  // };
 
   // Populate categoryA and categoryB based on materials
   materials.forEach((mat) => {
@@ -76,22 +90,20 @@ const ProcedureResultsPage = () => {
 
   // Handle procedure change
   const handleProcedureChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedProcedure(e.target.value);
-  };
+  const procedureName = e.target.value;
+  setSelectedProcedure(procedureName);
 
-  // Handle specialty change (updated to reflect specialty from procedures)
-  const handleSpecialtyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedProc = procedures.find(p => p.name === selectedProcedure);
-    if (selectedProc) {
-      setSelectedSpecialty(selectedProc.specialty); // Sync specialty with selected procedure
-    }
-  };
+  const selectedProc = procedures.find(p => p.name === procedureName);
+  if (selectedProc) {
+    setSelectedSpecialty(selectedProc.specialty);
+  }
+};
+
 
   return (
     <>
       <Head>
         <title>Incision - Cost Analysis Dashboard</title>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
       </Head>
 
       <div className="max-w-7xl mx-auto p-6">
@@ -109,10 +121,11 @@ const ProcedureResultsPage = () => {
             <SelectBox
               label="Specialty"
               value={selectedSpecialty}
-              onChange={handleSpecialtyChange}
+              onChange={() => {}} // Optional: no-op or remove handler
               options={procedures.map((p) => ({ label: p.specialty.replace(/_/g, ' '), value: p.specialty }))}
             />
           </div>
+
 
           {/* Total Cost Table */}
           <div className="mb-8">
