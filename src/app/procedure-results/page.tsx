@@ -50,7 +50,6 @@ const ProcedureResultsPage = () => {
     setProcedureDetail(null);
   };
 
-  // Handle procedure change
   const handleProcedureChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedProcedureId(Number(e.target.value));
   };
