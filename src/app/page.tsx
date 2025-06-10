@@ -1,30 +1,95 @@
-export default function HomePage() {
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    // Basic form validation
+    if (!email || !password) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    try {
+      // Replace with your actual authentication logic
+      if (email === 'test@example.com' && password === 'password123') {
+        document.cookie = 'authToken=mock-test-user-token; path=/home';
+        setTimeout(() => router.push('/home'), 0);
+      } else {
+        setError('Invalid email or password');
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+    }
+  };
+
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Welcome to Incision</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+        <h1 className="text-4xl font-medium text-[var(--color-primary-dark)] text-center mb-6">
+          incision
+        </h1>
 
-      <div className="bg-white p-6 rounded-lg shadow-lg">
-        <p className="text-lg">
-          Your surgical procedure cost optimization platform. Navigate using the sidebar to access different features.
-        </p>
+        {error && (
+          <div className="mb-4 text-red-500 text-sm text-center">
+            {error}
+          </div>
+        )}
 
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-[var(--color-primary-light)] p-4 rounded-md shadow-md">
-            <h3 className="font-medium text-xl font-bold mb-2">Upload Documents</h3>
-            <p>Upload Excel files for cost analysis</p>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-dark)]"
+              placeholder="Enter your email"
+              required
+            />
           </div>
 
-          <div className="bg-[var(--color-primary-light)] p-4 rounded-md shadow-md">
-            <h3 className="font-medium text-xl font-bold mb-2">View Procedure Results</h3>
-            <p>Review detailed cost breakdown by procedure</p>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-dark)]"
+              placeholder="Enter your password"
+              required
+            />
           </div>
 
-          <div className="bg-[var(--color-primary-light)] p-4 rounded-md shadow-md">
-            <h3 className="font-medium text-xl font-bold mb-2">Analytics Dashboard</h3>
-            <p>Visualize cost-saving opportunities</p>
-          </div>
-        </div>
+          <button
+            type="submit"
+            className="w-full bg-[var(--color-primary-dark)] text-white py-2 rounded-md hover:bg-[color-mix(in srgb, var(--color-primary-dark), #000 10%)] transition-colors"
+          >
+            Sign In
+          </button>
+        </form>
       </div>
+
+      <style jsx>{`
+        :root {
+          --color-primary-dark: #1a2a44;
+        }
+      `}</style>
     </div>
   );
 }

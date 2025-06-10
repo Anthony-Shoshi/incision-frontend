@@ -8,7 +8,7 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   const navItems = [
-    { name: 'Home', path: '/', icon: <Home className="mr-2" size={20} /> },
+    { name: 'Home', path: '/home', icon: <Home className="mr-2" size={20} /> },
     { name: 'Document', path: '/document', icon: <FileText className="mr-2" size={20} /> },
     { name: 'Procedure Results', path: '/procedure-results', icon: <ClipboardList className="mr-2" size={20} /> },
     { name: 'Analytics', path: '/analytics', icon: <BarChart2 className="mr-2" size={20} /> },
