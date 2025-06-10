@@ -5,7 +5,6 @@ import Head from 'next/head';
 import { Procedure, Speciality } from '@/types/models';
 
 const ProcedureResultsPage = () => {
-const ProcedureResultsPage = () => {
   const [specialities, setSpecialities] = useState<Speciality[]>([]);
   const [procedures, setProcedures] = useState<Procedure[]>([]);
   const [selectedSpecialityId, setSelectedSpecialityId] = useState<number | null>(null);
@@ -50,24 +49,6 @@ const ProcedureResultsPage = () => {
     setSelectedSpecialityId(Number(e.target.value));
     setProcedureDetail(null);
   };
-
-  // Initialize costs object
-  const costs = {
-    total: doctors.map(() => ''),
-    categoryA: {},
-    categoryB: {},
-  };
-
-  // Populate categoryA and categoryB based on materials
-  materials.forEach((mat) => {
-    const label = `${mat.name} (${mat.type})`;
-    const costRow = doctors.map(() => ''); // Placeholder for dynamic costs
-    if (mat.category === 'A') {
-      costs.categoryA[label] = costRow;
-    } else if (mat.category === 'B') {
-      costs.categoryB[label] = costRow;
-    }
-  });
 
   // Handle procedure change
   const handleProcedureChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
