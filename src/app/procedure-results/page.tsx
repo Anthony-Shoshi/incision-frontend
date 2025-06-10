@@ -64,7 +64,6 @@ const ProcedureResultsPage = () => {
         <div className="bg-white shadow-lg rounded-lg p-8 font-poppins">
           <h2 className="text-3xl font-semibold text-gray-800 mb-6">Incision - Cost Analysis Dashboard</h2>
 
-          {/* Dropdowns */}
           <div className="flex gap-4 mb-6">
             <SelectBox
               label="Speciality"
@@ -86,14 +85,12 @@ const ProcedureResultsPage = () => {
             />
           </div>
 
-          {/* Result */}
           {loading ? (
             <p>Loading data...</p>
           ) : !procedureDetail ? (
             <p className="text-gray-600">Please select a speciality and procedure to view details.</p>
           ) : (
             <>
-              {/* Cost Table */}
               <div className="mb-8">
                 <h3 className="text-xl font-semibold mb-4">Procedure Cost</h3>
                 <table className="w-full border border-gray-300 text-sm text-center">
