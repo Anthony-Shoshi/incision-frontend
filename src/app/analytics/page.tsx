@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import SelectBox from "../../components/SelectBox";
+import SelectBox from "@/components/SelectBox";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import { Procedure, Speciality } from "@/types/models";
 
