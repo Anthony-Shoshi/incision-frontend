@@ -13,21 +13,34 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
 
-    // Basic form validation
     if (!email || !password) {
       setError('Please fill in all fields');
       return;
     }
 
     try {
-      // Replace with your actual authentication logic
-      if (email === 'test@example.com' && password === 'password123') {
-        document.cookie = 'authToken=mock-test-user-token; path=/home';
-        setTimeout(() => router.push('/home'), 0);
+      const res = await fetch('http://127.0.0.1:5050/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: email,
+          password: password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.access_token) {
+        // Set token as cookie for client-side access
+        localStorage.setItem("authToken", data.access_token);
+        window.location.href = "/home";
       } else {
-        setError('Invalid email or password');
+        setError(data.error || 'Invalid login credentials');
       }
     } catch (err) {
+      console.error(err);
       setError('An error occurred. Please try again.');
     }
   };
@@ -48,15 +61,15 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
+              Username
             </label>
             <input
-              type="email"
+              type="text"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-primary-dark)]"
-              placeholder="Enter your email"
+              placeholder="Enter your username"
               required
             />
           </div>
