@@ -4,7 +4,7 @@ import { FileSpreadsheet } from "lucide-react";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import  toast  from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 const DocumentPage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -25,10 +25,20 @@ const DocumentPage = () => {
     const formData = new FormData();
     formData.append("file", file);
 
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      toast.error("Authentication token missing. Please log in again.");
+      return;
+    }
+
     try {
       setUploading(true);
       const response = await fetch("http://127.0.0.1:5050/api/upload-dataset", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
 
@@ -36,7 +46,8 @@ const DocumentPage = () => {
         toast.success("Your file was uploaded successfully.");
         router.push("/procedure-results");
       } else {
-        toast.error("Upload failed. Please check your file and try again.");
+        const errorData = await response.json();
+        toast.error(errorData.error || "Upload failed. Please check your file.");
       }
     } catch (error) {
       console.error("Upload error:", error);
