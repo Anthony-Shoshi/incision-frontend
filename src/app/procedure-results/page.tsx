@@ -2,7 +2,7 @@
 import SelectBox from '@/components/SelectBox';
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { Procedure, Speciality, Surgeon } from '@/types/models';
+import { Procedure, ProcedureDetail, Speciality, Surgeon } from '@/types/models';
 
 const ProcedureResultsPage = () => {
   const [specialities, setSpecialities] = useState<Speciality[]>([]);
@@ -12,11 +12,11 @@ const ProcedureResultsPage = () => {
   const [surgeons, setSurgeons] = useState<Surgeon[]>([]);
   const [selectedSurgeonId, setSelectedSurgeonId] = useState<number | null>(null);
 
-  const [procedureDetail, setProcedureDetail] = useState<any | null>(null);
+  const [procedureDetail, setProcedureDetail] = useState<ProcedureDetail | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    fetch("http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/specialities")
+    fetch("http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/specialities")
       .then(res => res.json())
       .then(data => {
         setSpecialities(data);
@@ -26,7 +26,7 @@ const ProcedureResultsPage = () => {
 
   useEffect(() => {
     if (selectedSpecialityId !== null) {
-      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/procedures?speciality_id=${selectedSpecialityId}`)
+      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/procedures?speciality_id=${selectedSpecialityId}`)
         .then(res => res.json())
         .then(data => {
           setProcedures(data);
@@ -39,7 +39,7 @@ const ProcedureResultsPage = () => {
     if (selectedProcedureId !== null) {
       setLoading(true);
 
-      let url = `http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/procedure-detail?procedure_id=${selectedProcedureId}`;
+      let url = `http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/procedure-detail?procedure_id=${selectedProcedureId}`;
       if (selectedSurgeonId !== null) {
         url += `&surgeon_id=${selectedSurgeonId}`;
       }
@@ -57,7 +57,7 @@ const ProcedureResultsPage = () => {
     if (selectedProcedureId !== null) {
       setLoading(true);
 
-      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/surgeons?procedure_id=${selectedProcedureId}`)
+      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/surgeons?procedure_id=${selectedProcedureId}`)
         .then(res => res.json())
         .then(data => {
           setSurgeons(data);
@@ -152,7 +152,7 @@ const ProcedureResultsPage = () => {
                       <td className="p-3 border border-gray-300">${procedureDetail.procedure.original_cost.toFixed(2)}</td>
                       <td className="p-3 border border-gray-300 text-red-600">${procedureDetail.procedure.optimized_cost.toFixed(2)}</td>
                       <td className="p-3 border border-gray-300">
-                        {procedureDetail.surgeons.map((s: any, idx: number) => (
+                        {procedureDetail.surgeons.map((s, idx) => (
                           <span
                             key={idx}
                             className="inline-block px-2 py-1 border bg-[var(--color-primary-light)] text-[var(--color-primary-dark)] rounded-sm mr-1 mb-1"
@@ -181,17 +181,17 @@ const ProcedureResultsPage = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {Object.entries(procedureDetail.materials).map(([type, subtypes]: [string, any]) => {
-                        const typeRows = Object.values(subtypes).reduce((sum: number, arr: any) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
+                      {Object.entries(procedureDetail.materials).map(([type, subtypes]) => {
+                        const typeRows = Object.values(subtypes).reduce((sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0), 0);
 
                         let typeRendered = false;
 
-                        return Object.entries(subtypes).map(([subtype, materials]: [string, any]) => {
+                        return Object.entries(subtypes).map(([subtype, materials]) => {
                           if (!Array.isArray(materials) || materials.length === 0) return null;
 
                           let subtypeRendered = false;
 
-                          return materials.map((mat: any, idx: number) => (
+                          return materials.map((mat, idx) => (
                             <tr key={`${type}-${subtype}-${idx}`} className="border-t border-gray-200">
                               {!typeRendered && (
                                 <td

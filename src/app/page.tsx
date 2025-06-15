@@ -17,7 +17,7 @@ export default function LoginPage() {
     }
 
     try {
-      const res = await fetch('http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/auth/login', {
+      const res = await fetch('http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

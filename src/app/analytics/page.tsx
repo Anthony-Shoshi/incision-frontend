@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import SelectBox from "@/components/SelectBox";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
-import { Procedure, Speciality, Surgeon } from "@/types/models";
+import { Material, Procedure, Speciality, Surgeon } from "@/types/models";
 
 const AnalyticsPage = () => {
   const [specialities, setSpecialities] = useState<Speciality[]>([]);
@@ -11,14 +11,14 @@ const AnalyticsPage = () => {
   const [selectedSpecialityId, setSelectedSpecialityId] = useState<number | null>(null);
   const [selectedProcedureId, setSelectedProcedureId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [procedureDetail, setProcedureDetail] = useState<any | null>(null);
+  const [procedureDetail, setProcedureDetail] = useState<Material[]>([]);
   const [surgeons, setSurgeons] = useState<Surgeon[]>([]);
   const [selectedSurgeonId, setSelectedSurgeonId] = useState<number | null>(null);
-  const [surgeonProcedures, setSurgeonProcedures] = useState<any[]>([]);
+  const [surgeonProcedures, setSurgeonProcedures] = useState<Procedure[]>([]);
 
 
   useEffect(() => {
-    fetch("http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/specialities")
+    fetch("http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/specialities")
       .then(res => res.json())
       .then(data => {
         setSpecialities(data);
@@ -28,7 +28,7 @@ const AnalyticsPage = () => {
 
   useEffect(() => {
     if (selectedSpecialityId !== null) {
-      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/procedure-costs-summary?speciality_id=${selectedSpecialityId}`)
+      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/procedure-costs-summary?speciality_id=${selectedSpecialityId}`)
         .then(res => res.json())
         .then(data => {
           setProcedures(data);
@@ -40,7 +40,7 @@ const AnalyticsPage = () => {
   useEffect(() => {
     if (selectedProcedureId !== null) {
       setLoading(true);
-      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/material-costs-breakdown?procedure_id=${selectedProcedureId}`)
+      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/material-costs-breakdown?procedure_id=${selectedProcedureId}`)
         .then(res => res.json())
         .then(data => {
           setProcedureDetail(data);
@@ -54,7 +54,7 @@ const AnalyticsPage = () => {
       setLoading(true);
 
       // Fetch surgeons
-      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/surgeons?procedure_id=${selectedProcedureId}`)
+      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/surgeons?procedure_id=${selectedProcedureId}`)
         .then(res => res.json())
         .then(data => {
           setSurgeons(data);
@@ -66,7 +66,7 @@ const AnalyticsPage = () => {
   useEffect(() => {
     if (selectedSurgeonId !== null) {
       setLoading(true);
-      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/procedures-by-surgeon?surgeon_id=${selectedSurgeonId}`)
+      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/procedures-by-surgeon?surgeon_id=${selectedSurgeonId}`)
         .then(res => res.json())
         .then(data => {
           setSurgeonProcedures(data);
@@ -77,7 +77,7 @@ const AnalyticsPage = () => {
 
   const handleSpecialityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSpecialityId(Number(e.target.value));
-    setProcedureDetail(null);
+    setProcedureDetail([]);
   };
 
   const handleProcedureChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -98,7 +98,7 @@ const AnalyticsPage = () => {
 
   // Chart for Material Cost Breakdown
   const materialChartData =
-    procedureDetail?.map((material: any) => ({
+    procedureDetail?.map(material => ({
       name: material.material_name,
       original: material.original_cost,
       optimized: material.optimized_cost,
