@@ -18,7 +18,7 @@ const AnalyticsPage = () => {
 
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5050/api/specialities")
+    fetch("http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/specialities")
       .then(res => res.json())
       .then(data => {
         setSpecialities(data);
@@ -28,7 +28,7 @@ const AnalyticsPage = () => {
 
   useEffect(() => {
     if (selectedSpecialityId !== null) {
-      fetch(`http://127.0.0.1:5050/api/procedure-costs-summary?speciality_id=${selectedSpecialityId}`)
+      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/procedure-costs-summary?speciality_id=${selectedSpecialityId}`)
         .then(res => res.json())
         .then(data => {
           setProcedures(data);
@@ -40,7 +40,7 @@ const AnalyticsPage = () => {
   useEffect(() => {
     if (selectedProcedureId !== null) {
       setLoading(true);
-      fetch(`http://127.0.0.1:5050/api/material-costs-breakdown?procedure_id=${selectedProcedureId}`)
+      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/material-costs-breakdown?procedure_id=${selectedProcedureId}`)
         .then(res => res.json())
         .then(data => {
           setProcedureDetail(data);
@@ -54,7 +54,7 @@ const AnalyticsPage = () => {
       setLoading(true);
 
       // Fetch surgeons
-      fetch(`http://127.0.0.1:5050/api/surgeons?procedure_id=${selectedProcedureId}`)
+      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/surgeons?procedure_id=${selectedProcedureId}`)
         .then(res => res.json())
         .then(data => {
           setSurgeons(data);
@@ -66,7 +66,7 @@ const AnalyticsPage = () => {
   useEffect(() => {
     if (selectedSurgeonId !== null) {
       setLoading(true);
-      fetch(`http://127.0.0.1:5050/api/procedures-by-surgeon?surgeon_id=${selectedSurgeonId}`)
+      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/procedures-by-surgeon?surgeon_id=${selectedSurgeonId}`)
         .then(res => res.json())
         .then(data => {
           setSurgeonProcedures(data);

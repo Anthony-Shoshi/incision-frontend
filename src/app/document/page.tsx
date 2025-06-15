@@ -34,7 +34,7 @@ const DocumentPage = () => {
 
     try {
       setUploading(true);
-      const response = await fetch("http://127.0.0.1:5050/api/upload-dataset", {
+      const response = await fetch("http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/upload-dataset", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -16,7 +16,7 @@ const ProcedureResultsPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5050/api/specialities")
+    fetch("http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/specialities")
       .then(res => res.json())
       .then(data => {
         setSpecialities(data);
@@ -26,7 +26,7 @@ const ProcedureResultsPage = () => {
 
   useEffect(() => {
     if (selectedSpecialityId !== null) {
-      fetch(`http://127.0.0.1:5050/api/procedures?speciality_id=${selectedSpecialityId}`)
+      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/procedures?speciality_id=${selectedSpecialityId}`)
         .then(res => res.json())
         .then(data => {
           setProcedures(data);
@@ -39,7 +39,7 @@ const ProcedureResultsPage = () => {
     if (selectedProcedureId !== null) {
       setLoading(true);
 
-      let url = `http://127.0.0.1:5050/api/procedure-detail?procedure_id=${selectedProcedureId}`;
+      let url = `http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/procedure-detail?procedure_id=${selectedProcedureId}`;
       if (selectedSurgeonId !== null) {
         url += `&surgeon_id=${selectedSurgeonId}`;
       }
@@ -57,7 +57,7 @@ const ProcedureResultsPage = () => {
     if (selectedProcedureId !== null) {
       setLoading(true);
 
-      fetch(`http://127.0.0.1:5050/api/surgeons?procedure_id=${selectedProcedureId}`)
+      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/surgeons?procedure_id=${selectedProcedureId}`)
         .then(res => res.json())
         .then(data => {
           setSurgeons(data);
