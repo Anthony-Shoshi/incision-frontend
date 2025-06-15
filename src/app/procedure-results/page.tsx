@@ -2,19 +2,21 @@
 import SelectBox from '@/components/SelectBox';
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
-import { Procedure, Speciality } from '@/types/models';
+import { Procedure, Speciality, Surgeon } from '@/types/models';
 
 const ProcedureResultsPage = () => {
   const [specialities, setSpecialities] = useState<Speciality[]>([]);
   const [procedures, setProcedures] = useState<Procedure[]>([]);
   const [selectedSpecialityId, setSelectedSpecialityId] = useState<number | null>(null);
   const [selectedProcedureId, setSelectedProcedureId] = useState<number | null>(null);
+  const [surgeons, setSurgeons] = useState<Surgeon[]>([]);
+  const [selectedSurgeonId, setSelectedSurgeonId] = useState<number | null>(null);
 
   const [procedureDetail, setProcedureDetail] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5050/api/specialities")
+    fetch("http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/specialities")
       .then(res => res.json())
       .then(data => {
         setSpecialities(data);
@@ -24,7 +26,7 @@ const ProcedureResultsPage = () => {
 
   useEffect(() => {
     if (selectedSpecialityId !== null) {
-      fetch(`http://127.0.0.1:5050/api/procedures?speciality_id=${selectedSpecialityId}`)
+      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/procedures?speciality_id=${selectedSpecialityId}`)
         .then(res => res.json())
         .then(data => {
           setProcedures(data);
@@ -36,23 +38,52 @@ const ProcedureResultsPage = () => {
   useEffect(() => {
     if (selectedProcedureId !== null) {
       setLoading(true);
-      fetch(`http://127.0.0.1:5050/api/procedure-detail?procedure_id=${selectedProcedureId}`)
+
+      let url = `http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/procedure-detail?procedure_id=${selectedProcedureId}`;
+      if (selectedSurgeonId !== null) {
+        url += `&surgeon_id=${selectedSurgeonId}`;
+      }
+
+      fetch(url)
         .then(res => res.json())
         .then(data => {
           setProcedureDetail(data);
           setLoading(false);
         });
     }
+  }, [selectedProcedureId, selectedSurgeonId]);
+
+  useEffect(() => {
+    if (selectedProcedureId !== null) {
+      setLoading(true);
+
+      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000//api/surgeons?procedure_id=${selectedProcedureId}`)
+        .then(res => res.json())
+        .then(data => {
+          setSurgeons(data);
+          setSelectedSurgeonId(null); // Always reset on procedure change
+
+        });
+    }
   }, [selectedProcedureId]);
+
+  const handleProcedureChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedProcedureId(Number(e.target.value));
+    setSelectedSurgeonId(null); // Reset surgeon
+    setProcedureDetail(null);
+  };
 
   const handleSpecialityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSpecialityId(Number(e.target.value));
     setProcedureDetail(null);
+    setSelectedSurgeonId(null);
   };
 
-  const handleProcedureChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedProcedureId(Number(e.target.value));
+  const handleSurgeonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setSelectedSurgeonId(value ? Number(value) : null);
   };
+
 
   return (
     <>
@@ -83,6 +114,19 @@ const ProcedureResultsPage = () => {
                 value: p.id.toString(),
               }))}
             />
+            <SelectBox
+              label="Surgeon"
+              value={selectedSurgeonId?.toString() || ''}
+              onChange={handleSurgeonChange}
+              options={[
+                { label: 'Select Surgeon', value: '' }, // Default empty option
+                ...surgeons.map(s => ({
+                  label: s.name.charAt(0).toUpperCase() + s.name.slice(1),
+                  value: s.id.toString(),
+                }))
+              ]}
+            />
+
           </div>
 
           {loading ? (
@@ -105,8 +149,8 @@ const ProcedureResultsPage = () => {
                   <tbody>
                     <tr className="bg-gray-100 text-gray-800 font-semibold">
                       <td className="p-3 border border-gray-300">{procedureDetail.procedure.name}</td>
-                      <td className="p-3 border border-gray-300">€{procedureDetail.procedure.original_cost.toFixed(2)}</td>
-                      <td className="p-3 border border-gray-300 text-red-600">€{procedureDetail.procedure.optimized_cost.toFixed(2)}</td>
+                      <td className="p-3 border border-gray-300">${procedureDetail.procedure.original_cost.toFixed(2)}</td>
+                      <td className="p-3 border border-gray-300 text-red-600">${procedureDetail.procedure.optimized_cost.toFixed(2)}</td>
                       <td className="p-3 border border-gray-300">
                         {procedureDetail.surgeons.map((s: any, idx: number) => (
                           <span
@@ -166,8 +210,8 @@ const ProcedureResultsPage = () => {
                                 </td>
                               )}
                               <td className="p-3 border border-gray-300">{mat.name}</td>
-                              <td className="p-3 border border-gray-300 text-center">€{mat.original_price.toFixed(2)}</td>
-                              <td className="p-3 border border-gray-300 text-center text-red-600">€{mat.optimized_price.toFixed(2)}</td>
+                              <td className="p-3 border border-gray-300 text-center">${mat.original_price.toFixed(2)}</td>
+                              <td className="p-3 border border-gray-300 text-center text-red-600">${mat.optimized_price.toFixed(2)}</td>
                               <td className="p-3 border border-gray-300 text-center">
                                 {mat.surgeon_specific_action === "ADDED" ? (
                                   <span className="inline-block px-2 py-1 border bg-[var(--color-primary-light)] text-[var(--color-primary-dark)] rounded-sm">

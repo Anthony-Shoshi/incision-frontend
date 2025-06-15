@@ -1,16 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { Home, FileText, BarChart2, ClipboardList, LogOut } from 'lucide-react';
 
 const Sidebar = () => {
   const pathname = usePathname();
-  const router = useRouter();
 
   const navItems = [
     { name: 'Home', path: '/home', icon: <Home className="mr-2" size={20} /> },
-    { name: 'Document', path: '/document', icon: <FileText className="mr-2" size={20} /> },
+    { name: 'Upload', path: '/document', icon: <FileText className="mr-2" size={20} /> },
     { name: 'Procedure Results', path: '/procedure-results', icon: <ClipboardList className="mr-2" size={20} /> },
     { name: 'Analytics', path: '/analytics', icon: <BarChart2 className="mr-2" size={20} /> },
   ];
