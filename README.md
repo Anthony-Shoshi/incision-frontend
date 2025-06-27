@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Incision Frontend
 
-## Getting Started
+This is the frontend application for **Incision**, a medical procedure material optimization platform. It allows authenticated users to upload medical datasets and view cost optimization results using predictive models powered by the backend service.
 
-First, run the development server:
+## 🔗 Project Links
+
+- **Frontend Repo (This Project)**: [https://github.com/Anthony-Shoshi/incision-frontend](https://github.com/Anthony-Shoshi/incision-frontend)
+
+- **Backend Repo (Must be set up first)**: [https://github.com/Dawoodikram482/incision_price_predictor](https://github.com/Dawoodikram482/incision_price_predictor)
+
+---
+
+## ⚙️ Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Anthony-Shoshi/incision-frontend.git
+```
+```bash
+cd incision-frontend
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Create a file named .env.local in the root of the project and add the following line:
+```bash
+NEXT_PUBLIC_API_BASE_URL=http://localhost:5050/api
+```
+
+### 4. Run the app in development mode
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will be available at: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Production
 
-## Learn More
+### Build for production
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🔐 Login Credentials
 
-## Deploy on Vercel
+To access the app after backend setup:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Username:** `admin`
+- **Password:** `admin123`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## ⚠️ Important Notes
+
+1. **Backend must be running first** for authentication and data upload to function correctly.  
+   > Backend Repo: [https://github.com/Dawoodikram482/incision_price_predictor](https://github.com/Dawoodikram482/incision_price_predictor)
+
+2. The frontend app communicates with the backend on:  
+   `http://localhost:5050` — Make sure this matches your backend server URL.
+
+3. Uploaded files must be in `.csv` format and follow the required template.  
+   A sample file is available to download inside the app.
+
+---
+
+## 📦 Tech Stack
+
+- **Next.js** (React Framework)
+- **Tailwind CSS** (Styling)
+- **react-hot-toast** (Notifications)
+- **Lucide Icons** (UI Icons)
+
+---
+
+## 🧩 Features
+
+- Secure login with JWT stored in `localStorage`
+- Drag & drop file upload interface
+- Sidebar navigation (visible after login)
+- File validation and result navigation
+- Toast notifications for instant feedback
+
+---
+
+For any issues or questions, feel free to open an [Issue](https://github.com/Anthony-Shoshi/incision-frontend/issues).

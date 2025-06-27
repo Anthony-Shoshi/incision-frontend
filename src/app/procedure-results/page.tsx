@@ -14,9 +14,10 @@ const ProcedureResultsPage = () => {
 
   const [procedureDetail, setProcedureDetail] = useState<ProcedureDetail | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
-    fetch("http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/specialities")
+    fetch(`${API_BASE_URL}/specialities`)
       .then(res => res.json())
       .then(data => {
         setSpecialities(data);
@@ -26,7 +27,7 @@ const ProcedureResultsPage = () => {
 
   useEffect(() => {
     if (selectedSpecialityId !== null) {
-      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/procedures?speciality_id=${selectedSpecialityId}`)
+      fetch(`${API_BASE_URL}/procedures?speciality_id=${selectedSpecialityId}`)
         .then(res => res.json())
         .then(data => {
           setProcedures(data);
@@ -39,7 +40,7 @@ const ProcedureResultsPage = () => {
     if (selectedProcedureId !== null) {
       setLoading(true);
 
-      let url = `http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/procedure-detail?procedure_id=${selectedProcedureId}`;
+      let url = `${API_BASE_URL}/procedure-detail?procedure_id=${selectedProcedureId}`;
       if (selectedSurgeonId !== null) {
         url += `&surgeon_id=${selectedSurgeonId}`;
       }
@@ -57,7 +58,7 @@ const ProcedureResultsPage = () => {
     if (selectedProcedureId !== null) {
       setLoading(true);
 
-      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/surgeons?procedure_id=${selectedProcedureId}`)
+      fetch(`${API_BASE_URL}/surgeons?procedure_id=${selectedProcedureId}`)
         .then(res => res.json())
         .then(data => {
           setSurgeons(data);
