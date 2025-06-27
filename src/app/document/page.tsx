@@ -10,6 +10,7 @@ const DocumentPage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [uploading, setUploading] = useState(false);
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const handleBrowseClick = () => {
     fileInputRef.current?.click();
@@ -34,7 +35,7 @@ const DocumentPage = () => {
 
     try {
       setUploading(true);
-      const response = await fetch("http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/upload-dataset", {
+      const response = await fetch(`${API_BASE_URL}/upload-dataset`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

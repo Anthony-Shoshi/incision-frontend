@@ -15,10 +15,10 @@ const AnalyticsPage = () => {
   const [surgeons, setSurgeons] = useState<Surgeon[]>([]);
   const [selectedSurgeonId, setSelectedSurgeonId] = useState<number | null>(null);
   const [surgeonProcedures, setSurgeonProcedures] = useState<Procedure[]>([]);
-
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
-    fetch("http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/specialities")
+    fetch(`${API_BASE_URL}/specialities`)
       .then(res => res.json())
       .then(data => {
         setSpecialities(data);
@@ -28,7 +28,7 @@ const AnalyticsPage = () => {
 
   useEffect(() => {
     if (selectedSpecialityId !== null) {
-      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/procedure-costs-summary?speciality_id=${selectedSpecialityId}`)
+      fetch(`${API_BASE_URL}/procedure-costs-summary?speciality_id=${selectedSpecialityId}`)
         .then(res => res.json())
         .then(data => {
           setProcedures(data);
@@ -40,7 +40,7 @@ const AnalyticsPage = () => {
   useEffect(() => {
     if (selectedProcedureId !== null) {
       setLoading(true);
-      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/material-costs-breakdown?procedure_id=${selectedProcedureId}`)
+      fetch(`${API_BASE_URL}/material-costs-breakdown?procedure_id=${selectedProcedureId}`)
         .then(res => res.json())
         .then(data => {
           setProcedureDetail(data);
@@ -54,7 +54,7 @@ const AnalyticsPage = () => {
       setLoading(true);
 
       // Fetch surgeons
-      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/surgeons?procedure_id=${selectedProcedureId}`)
+      fetch(`${API_BASE_URL}/surgeons?procedure_id=${selectedProcedureId}`)
         .then(res => res.json())
         .then(data => {
           setSurgeons(data);
@@ -66,7 +66,7 @@ const AnalyticsPage = () => {
   useEffect(() => {
     if (selectedSurgeonId !== null) {
       setLoading(true);
-      fetch(`http://incision-price-predictor-container-dns.westeurope.azurecontainer.io:5000/api/procedures-by-surgeon?surgeon_id=${selectedSurgeonId}`)
+      fetch(`${API_BASE_URL}/procedures-by-surgeon?surgeon_id=${selectedSurgeonId}`)
         .then(res => res.json())
         .then(data => {
           setSurgeonProcedures(data);
