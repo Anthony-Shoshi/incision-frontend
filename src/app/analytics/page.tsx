@@ -15,6 +15,7 @@ const AnalyticsPage = () => {
   const [surgeons, setSurgeons] = useState<Surgeon[]>([]);
   const [selectedSurgeonId, setSelectedSurgeonId] = useState<number | null>(null);
   const [surgeonProcedures, setSurgeonProcedures] = useState<Procedure[]>([]);
+  const [procedureCosts, setProcedureCosts] = useState<any>(null); // State for API response
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
@@ -44,6 +45,14 @@ const AnalyticsPage = () => {
         .then(res => res.json())
         .then(data => {
           setProcedureDetail(data);
+          setLoading(false);
+        });
+
+      // Fetch procedure costs for the selected procedure
+      fetch(`${API_BASE_URL}/procedure-costs?procedure_id=${selectedProcedureId}`)
+        .then(res => res.json())
+        .then(data => {
+          setProcedureCosts(data);
           setLoading(false);
         });
     }
@@ -88,7 +97,7 @@ const AnalyticsPage = () => {
     setSelectedSurgeonId(Number(e.target.value));
   };
 
-  // Chart for Procedure Cost Summary (original vs optimized for each procedure)
+  // Chart for Procedure Cost Summary
   const procedureChartData =
     procedures?.map(p => ({
       name: p.procedure_name,
@@ -111,6 +120,17 @@ const AnalyticsPage = () => {
     optimized: proc.optimized_cost,
   }));
 
+  // Chart for Procedure Costs by Surgeon
+  const procedureCostChartData = procedureCosts
+    ? [
+        { name: "Standard", cost: procedureCosts.standard_cost },
+        ...procedureCosts.surgeons.map((s: any) => ({
+          name: s.name,
+          cost: s.total_cost,
+        })),
+      ]
+    : [];
+
   return (
     <>
       <div className="p-8">
@@ -119,21 +139,17 @@ const AnalyticsPage = () => {
         <div className="mb-6">
           <SelectBox
             label="Speciality"
-            value={selectedSpecialityId?.toString() || ''}
+            value={selectedSpecialityId?.toString() || ""}
             onChange={handleSpecialityChange}
             options={specialities.map(s => ({
-              label: s.name.replace(/_/g, ' '),
+              label: s.name.replace(/_/g, " "),
               value: s.id.toString(),
             }))}
           />
         </div>
 
         <div className="bg-white p-4 rounded-lg shadow">
-          <BarChart
-            width={1200}
-            height={200}
-            data={procedureChartData}
-          >
+          <BarChart width={1200} height={200} data={procedureChartData}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="name" />
             <YAxis />
@@ -150,7 +166,7 @@ const AnalyticsPage = () => {
         <div className="mb-6">
           <SelectBox
             label="Procedure"
-            value={selectedProcedureId?.toString() || ''}
+            value={selectedProcedureId?.toString() || ""}
             onChange={handleProcedureChange}
             options={procedures.map(p => ({
               label: p.procedure_name,
@@ -163,11 +179,7 @@ const AnalyticsPage = () => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <BarChart
-              width={1200}
-              height={200}
-              data={materialChartData}
-            >
+            <BarChart width={1200} height={200} data={materialChartData}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="name" />
               <YAxis />
@@ -177,7 +189,24 @@ const AnalyticsPage = () => {
             </BarChart>
           )}
         </div>
+      </div>
 
+      <div className="p-8">
+        <h1 className="text-3xl font-bold mb-6">Surgeon Cost Comparison</h1>
+
+        <div className="bg-white p-4 rounded-lg shadow">
+          {loading || !procedureCostChartData.length ? (
+            <p>Loading...</p>
+          ) : (
+            <BarChart width={1200} height={200} data={procedureCostChartData}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
+              <Bar dataKey="cost" fill="#5eb0ac" name="Total Cost" />
+            </BarChart>
+          )}
+        </div>
       </div>
 
       <div className="p-8">
@@ -186,7 +215,7 @@ const AnalyticsPage = () => {
         <div className="mb-6">
           <SelectBox
             label="Surgeon"
-            value={selectedSurgeonId?.toString() || ''}
+            value={selectedSurgeonId?.toString() || ""}
             onChange={handleSurgeonChange}
             options={surgeons.map(s => ({
               label: s.name.charAt(0).toUpperCase() + s.name.slice(1),
@@ -201,11 +230,7 @@ const AnalyticsPage = () => {
           ) : surgeonChartData.length === 0 ? (
             <p>No data available for this surgeon.</p>
           ) : (
-            <BarChart
-              width={1200}
-              height={200}
-              data={surgeonChartData}
-            >
+            <BarChart width={1200} height={200} data={surgeonChartData}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="name" />
               <YAxis />
@@ -215,7 +240,6 @@ const AnalyticsPage = () => {
             </BarChart>
           )}
         </div>
-
       </div>
     </>
   );
