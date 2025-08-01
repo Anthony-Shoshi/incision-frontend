@@ -26,20 +26,10 @@ const DocumentPage = () => {
     const formData = new FormData();
     formData.append("file", file);
 
-    const token = localStorage.getItem("authToken");
-
-    if (!token) {
-      toast.error("Authentication token missing. Please log in again.");
-      return;
-    }
-
     try {
       setUploading(true);
       const response = await fetch(`${API_BASE_URL}/upload-dataset`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         body: formData,
       });
 

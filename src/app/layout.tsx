@@ -6,13 +6,9 @@ import Sidebar from "@/components/Sidebar";
 import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // This runs only on the client
-    const authToken = localStorage.getItem("authToken");
-    setIsAuthenticated(!!authToken);
     setMounted(true);
   }, []);
 
@@ -22,7 +18,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Toaster />
         {mounted ? (
           <div className="flex min-h-screen">
-            {isAuthenticated && <Sidebar />}
+            <Sidebar />
             <main className="flex-1">{children}</main>
           </div>
         ) : null}
